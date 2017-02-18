@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import sinon from 'sinon';
 import 'sinon-mongoose';
 import {expect} from 'chai';
@@ -8,51 +9,45 @@ describe('User', ()=> {
   
   let user;
   before(()=>{
-    user = new User({
+    mongoose.connect('mongodb://localhost/test', (err)=> {
+      if (err) throw err;
+      console.log('mongoose connected to test db');
+       user = new User({
       username: "Abdelmageed",
       password: "password123"
     });
     
-    user.save()
+    user.save();
+    });
+   
   });
   
-  it('should create a new user with a username and password', (done)=> {
-    user = new User({
-      username: "Abdelmageed",
-      password: "123"
+  after(()=> {
+    //doesn't get removed
+    User.remove({username: "Abdelmageed"}, (err)=> {
+      if (err) throw err;
+      delete mongoose.models.User;
+      delete mongoose.modelSchemas.User;
+      console.log('user Abdelmageed removed');
+      mongoose.disconnect(()=> {
+      console.log('mongoose disconnected from test db')
+    })
     });
     
-    const userMock = sinon.mock(user);
-    userMock
-      .expects('save')
-      .yields(null);
     
-    user.save((err)=> {
-      userMock.verify();
-      expect(err).to.equal(null);
-      done();
-    });
-    
-  })
+  });
   
-  it('should hash the password', ()=> {
+  it('should hash the password', function(done) {
+    this.timeout(5000);
     const password = "password123",
           hash = bcrypt.hashSync(password);
     
-    const user = new User({
-      username: "Abdelmageed",
-      password
-    }),
-          userMock = sinon.mock(user)
-            .expects('save')
-            .yields(null, {
-              username:"Abdelmageed",
-              password
-            });
     
-    user.save((err, newUser)=> {
-      userMock.verify();
-      expect(newUser.password).to.equal(hash);
+    User.findOne({username: "Abdelmageed"}, (err, user)=> {
+      expect(err).to.equal(null);
+      console.log(user.password);
+      expect(bcrypt.compareSync(password, user.password)).to.equal(true);
+      done();
     });
     
   });

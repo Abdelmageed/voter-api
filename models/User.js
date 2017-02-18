@@ -19,7 +19,6 @@ UserSchema.pre('save', function(next) {
   // only hash the password if it has been modified (or is new)
   if (!user.isModified('password')) return next();
 
-  // hash the password along with our new salt
   bcrypt.hash(user.password, null, null, function (err, hash) {
     if (err) return next(err);
 
