@@ -1,7 +1,6 @@
 import config from './config';
-import express from 'express';
-export const app = express();
+import server from './server';
 
-app.listen(config.PORT, ()=> {
-  console.log(`express server listening on port ${config.PORT}`);
+server.listen(config.PORT, 'localhost', function() {
+  console.log(`express server listening at ${this.address().ip} on port ${this.address().port}`);
 });
