@@ -45,10 +45,28 @@ describe('User', ()=> {
     
     User.findOne({username: "Abdelmageed"}, (err, user)=> {
       expect(err).to.equal(null);
-      console.log(user.password);
       expect(bcrypt.compareSync(password, user.password)).to.equal(true);
       done();
     });
     
+  });
+  
+  it('should match the hashed password with its plain text password', (done)=> {
+    const expected = {isMatch: true};
+    
+    User.findOne({username: "Abdelmageed"}, (err, user)=> {
+      expect(err).to.equal(null);
+      expect(user.validatePassword('password123')).to.deep.equal(expected);
+      done();
+    });
+  });
+  
+  it('should return an error if hashed password does not match plain text password', (done)=> {
+    const expected = {error: 'wrong password'};
+    User.findOne({username: "Abdelmageed"}, (err, user)=> {
+      expect(err).to.equal(null);
+      expect(user.validatePassword('password1234')).to.deep.equal(expected);
+      done();
+    });
   });
 });

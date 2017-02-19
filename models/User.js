@@ -28,4 +28,9 @@ UserSchema.pre('save', function(next) {
   });
 });
 
+UserSchema.methods.validatePassword = function(password) {
+  return (bcrypt.compareSync(password, this.password))?
+    {isMatch: true} : {error: 'wrong password'};
+}
+
 export default mongoose.model('User', UserSchema);
