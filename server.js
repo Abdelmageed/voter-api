@@ -7,17 +7,18 @@ import morgan from 'morgan';
 const app = express();
 
 app.use(morgan('dev'));
-//app.use(session({
-//  secret: 'keyboard cat',
-//  resave: false,
-//  saveUninitialized: false
-//                }));
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false
+                }));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(passport.initialize());
-//app.use(passport.session());
+app.use(passport.session());
 
-app.post('/login', passport.authenticate('local', {session: false}), (req, res)=> {
-  res.send('logged in successfuly');
-})
+app.post('/login', passport.authenticate('local'), (req, res)=> {
+  res.end('logged in successfuly');
+});
+
 
 export default app;

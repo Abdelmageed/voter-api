@@ -23,9 +23,18 @@ passport.use(new localStrategy((username, password, done)=> {
       return done(null, false, {message: 'wrong password'});
     }
     
-    return done (null, user.local);
+    return done (null, user);
   });
 }));
 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 export default passport;
