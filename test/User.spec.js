@@ -14,11 +14,9 @@ from 'chai';
 import User from '../models/User';
 import bcrypt from 'bcrypt-nodejs';
 
-let agent = request('http://localhost:3000');
-
 describe('User', () => {
 
-  before(() => {
+  before((done) => {
     let user;
     mongoose.connect(config.DATA_URL, (err) => {
       if (err) throw err;
@@ -30,23 +28,27 @@ describe('User', () => {
         }
       });
 
-      user.save();
-      console.log('user Abdelmageed created');
+      user.save((err)=> {
+        if (err) throw err;
+        console.log('user Abdelmageed created');
+        done();
+      });
     });
 
   });
 
-  after(() => {
+  after((done) => {
     User.remove({
-      username: "Abdelmageed"
+      "local.username": "Abdelmageed"
     }, (err) => {
       if (err) throw err;
       delete mongoose.models.User;
       delete mongoose.modelSchemas.User;
       console.log('user Abdelmageed removed');
       mongoose.disconnect(() => {
-        console.log('mongoose disconnected from test db')
-      })
+        console.log('mongoose disconnected from test db');
+        done();
+      });
     });
 
   });
@@ -93,27 +95,4 @@ describe('User', () => {
   });
 });
 
-describe('POST /login', () => {
-
-  it('should respond with 200 and success message with valid credentials', (done) => {
-    const successMessage = "logged in successfuly";
-    agent
-      .post('/login')
-      .send('username=Abdelmageed&password=password123')
-      .expect(200, successMessage, done);
-  });
-  it('should respond with 401 on invalid credentials', (done) => {
-    const unauthorized = "Unauthorized"
-    agent
-      .post('/login')
-      .send('username=Abdelmageed&password=password1234')
-      .expect(401, unauthorized);
-
-    agent
-      .post('/login')
-      .send('username=Abdelmageedz&password=password1234')
-      .expect(401, unauthorized, done);
-
-  });
-});
   

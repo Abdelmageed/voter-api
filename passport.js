@@ -27,11 +27,33 @@ passport.use(new localStrategy((username, password, done)=> {
   });
 }));
 
-passport.serializeUser(function(user, done) {
+passport.use('local-signup', new LocalStrategy((username, password, done)=> {
+    
+    User.findOne({'local.username': username}, (err, user)=> {
+      
+      if (err) return done(err);
+      
+      if (user) return done(null, false, 'username already in use');
+      
+      let newUser = new User({
+        local: {
+          username,
+          password
+        }
+      });
+      
+      newUser.save((err, newUser)=> {
+        if (err) return done(err);
+        return done(null, newUser);
+      })
+    })
+  }))
+
+passport.serializeUser((user, done)=> {
   done(null, user.id);
 });
 
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser((id, done)=> {
   User.findById(id, function(err, user) {
     done(err, user);
   });
