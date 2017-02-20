@@ -1,12 +1,12 @@
 import request from 'supertest';
-import {app} from '../index';
+import app from '../server';
 import {expect} from 'chai';
 import config from '../config';
 import mongoose from 'mongoose';
 import User from '../models/User';
 
 describe('Routes', () => {
-let agent = request('http://localhost:3000');
+  let agent = request.agent(app.listen());
   before((done) => {
     let user;
     mongoose.connect(config.DATA_URL, (err) => {
@@ -71,19 +71,19 @@ let agent = request('http://localhost:3000');
 
   describe('POST /signup', () => {
     it('should sign up a user locally by username and password', function (done) {
-      this.timeout(5000);
       const successMessage = "your account has been created";
       agent
         .post('/signup')
         .send('username=NewUser&password=NewPassword123')
-        .expect(200, successMessage);
+        .expect(200, successMessage, done);
+    });
+    
+    it('should not sign up a user with a used username', (done)=> {
 
-      User.remove({
-        'local.username': "NewUser"
-      }, (err) => {
-        expect(err).to.equal(null);
-        done();
-      });
+      agent
+        .post('/signup')
+        .send('username=NewUser&password=NewPassword123')
+        .expect(401, done);
     });
   })
   

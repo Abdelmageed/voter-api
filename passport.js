@@ -15,7 +15,6 @@ passport.use(new localStrategy((username, password, done)=> {
     
     
     if(!user) {
-      console.log('user was not found');
       return done(null, false, {message: 'wrong username'});
     }
     
@@ -33,7 +32,7 @@ passport.use('local-signup', new LocalStrategy((username, password, done)=> {
       
       if (err) return done(err);
       
-      if (user) return done(null, false, 'username already in use');
+      if (user) return done(null, false, {message: 'username already in use'});
       
       let newUser = new User({
         local: {
