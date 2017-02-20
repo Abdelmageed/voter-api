@@ -24,4 +24,9 @@ app.post('/signup', passport.authenticate('local-signup'), (req,res)=> {
   res.end('your account has been created');
 });
 
+app.get('/logout', (req, res)=> {
+  req.logout();
+  res.end();
+})
+
 export default app;

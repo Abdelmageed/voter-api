@@ -67,6 +67,7 @@ describe('Routes', () => {
         .expect(401, unauthorized, done);
 
     });
+    
   });
 
   describe('POST /signup', () => {
@@ -87,4 +88,15 @@ describe('Routes', () => {
     });
   })
   
+  describe('GET /logout', ()=> {
+    it('should log out and remove req.user', (done)=> {
+      agent
+        .get('/logout')
+        .expect(200)
+        .end((err)=> {
+        expect(err).to.equal(null);
+        done();
+      })
+    })
+  })
 })
