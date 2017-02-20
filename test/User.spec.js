@@ -3,6 +3,7 @@ import {
   app
 }
 from '../server';
+import config from '../config';
 import mongoose from 'mongoose';
 import sinon from 'sinon';
 import 'sinon-mongoose';
@@ -13,11 +14,13 @@ from 'chai';
 import User from '../models/User';
 import bcrypt from 'bcrypt-nodejs';
 
+let agent = request('http://localhost:3000');
+
 describe('User', () => {
 
   before(() => {
     let user;
-    mongoose.connect('mongodb://localhost/test', (err) => {
+    mongoose.connect(config.DATA_URL, (err) => {
       if (err) throw err;
       console.log('mongoose connected to test db');
       user = new User({
@@ -91,21 +94,25 @@ describe('User', () => {
 });
 
 describe('POST /login', () => {
-  const user = {
-  local: {
-    username: "Abdelmageed",
-    password: "password123"
-  }
-};
-  it('should login with valid credentials', (done) => {
-    request('http://localhost:3000')
+
+  it('should respond with 200 and success message with valid credentials', (done) => {
+    const successMessage = "logged in successfuly";
+    agent
       .post('/login')
-      .send(user)
-      .expect(200)
-      .end((err, res) => {
-        expect(err).to.be.equal(null);
-        expect(res.body).to.deep.equal(user);
-        done();
-      });
+      .send('username=Abdelmageed&password=password123')
+      .expect(200, successMessage, done);
+  });
+  it('should respond with 401 on invalid credentials', (done) => {
+    const unauthorized = "Unauthorized"
+    agent
+      .post('/login')
+      .send('username=Abdelmageed&password=password1234')
+      .expect(401, unauthorized);
+
+    agent
+      .post('/login')
+      .send('username=Abdelmageedz&password=password1234')
+      .expect(401, unauthorized, done);
+
   });
 });

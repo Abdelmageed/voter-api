@@ -1,23 +1,23 @@
 import express from 'express';
 import passport from './passport';
 import bodyParser from 'body-parser';
+import session from 'express-session';
+import morgan from 'morgan';
 
 const app = express();
 
+app.use(morgan('dev'));
+//app.use(session({
+//  secret: 'keyboard cat',
+//  resave: false,
+//  saveUninitialized: false
+//                }));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(passport.initialize());
+//app.use(passport.session());
 
 app.post('/login', passport.authenticate('local', {session: false}), (req, res)=> {
-  res.end(req.user);
-//  res.end();
+  res.send('logged in successfuly');
 })
-
-app.get('/', (req, res)=> {
-  res.end('Hello');
-})
-
-//app.post('/login', (req, res)=> {
-//  res.end('authenticated');
-//})
 
 export default app;

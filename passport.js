@@ -1,22 +1,31 @@
 import User from './models/User';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
+import mongoose from 'mongoose';
+import config from './config';
 const localStrategy = LocalStrategy.Strategy;
 
 passport.use(new localStrategy((username, password, done)=> {
-  User.findOne({username}, (err, user)=> {
+//    return done (null, "nothing");
+  mongoose.connect(config.DATA_URL, ()=> {
+    console.log('connected to mongodb');
+  });
+  User.findOne({'local.username': username}, (err, user)=> {
     if (err) return done(err);
     
+    
     if(!user) {
-      return done(null, false, 'wrong username');
+      console.log('user was not found');
+      return done(null, false, {message: 'wrong username'});
     }
     
     if(user.validatePassword(password).error){
-      return done(null, false, 'wrong password');
+      return done(null, false, {message: 'wrong password'});
     }
     
-    return done (null, user);
+    return done (null, user.local);
   });
 }));
+
 
 export default passport;
