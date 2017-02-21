@@ -6,7 +6,8 @@ const UserSchema = new Schema({
   local: {
     username: String,
     password: String
-  }
+  },
+  polls: [{type: Schema.Types.ObjectId, ref: 'Poll'}]
 });
 
 UserSchema.pre('save', function (next) {
