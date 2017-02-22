@@ -3,6 +3,7 @@ import passport from './passport';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import morgan from 'morgan';
+import poll from './routers/poll';
 
 const app = express();
 
@@ -28,5 +29,7 @@ app.get('/logout', (req, res)=> {
   req.logout();
   res.end();
 })
+
+app.use('/poll', poll);
 
 export default app;
