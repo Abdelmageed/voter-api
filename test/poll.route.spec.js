@@ -53,5 +53,47 @@ describe('Poll Router', () => {
         .expect(200, done);
     })
     
+  });
+  
+  describe('GET /poll/:id', ()=> {
+    
+    it('responds with the poll with the given id', (done)=> {
+      const id = 1,
+            poll = {name: 'poll name'};
+      
+      const pollStub = sandbox.stub(Poll, 'find');
+      pollStub.yields(null, poll);
+      agent
+        .get('/poll/:id')
+        .send({id})
+        .expect(200, poll, done);
+    })
+  });
+  
+  describe('DELETE /poll/:id', ()=> {
+    
+    it('should remove the poll with the given id', (done)=> {
+      const id = 1;
+      
+      const pollStub = sandbox.stub(Poll, 'remove');
+      pollStub.yields(null);
+      agent
+        .delete('/poll/:id')
+        .send({id})
+        .expect(200, done);
+    })
+  });
+  
+  describe('POST /poll', ()=> {
+    
+    it('should save the give poll', (done)=> {
+      const poll = {name: 'created poll'};
+      const pollStub = sandbox.stub(Poll, 'create');
+      pollStub.yields(null, poll);
+      agent
+        .post('/poll')
+        .send(poll)
+        .expect(200, poll, done);
+    })
   })
 });
