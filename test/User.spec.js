@@ -1,10 +1,8 @@
 import request from 'supertest';
-import {
-  app
-}
-from '../server';
-import config from '../config';
+import { app } from '../server';
 import mongoose from 'mongoose';
+import config from '../config';
+import db from '../index';
 import sinon from 'sinon';
 import 'sinon-mongoose';
 import {
@@ -14,13 +12,11 @@ from 'chai';
 import User from '../models/User';
 import bcrypt from 'bcrypt-nodejs';
 
+
 describe('User', () => {
 
   before((done) => {
     let user;
-    mongoose.connect(config.DATA_URL, (err) => {
-      if (err) throw err;
-      console.log('mongoose connected to test db');
       user = new User({
         local: {
           username: "Abdelmageed",
@@ -33,7 +29,6 @@ describe('User', () => {
         console.log('user Abdelmageed created');
         done();
       });
-    });
 
   });
 
@@ -42,19 +37,15 @@ describe('User', () => {
       "local.username": "Abdelmageed"
     }, (err) => {
       if (err) throw err;
+      console.log('user Abdelmageed removed');
       delete mongoose.models.User;
       delete mongoose.modelSchemas.User;
-      console.log('user Abdelmageed removed');
-      mongoose.disconnect(() => {
-        console.log('mongoose disconnected from test db');
-        done();
-      });
+      done();
     });
 
   });
 
   it('should hash the password', function (done) {
-    this.timeout(5000);
     const password = "password123";
 
     User.findOne({

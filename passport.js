@@ -1,15 +1,10 @@
 import User from './models/User';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
-import mongoose from 'mongoose';
 import config from './config';
 const localStrategy = LocalStrategy.Strategy;
 
 passport.use(new localStrategy((username, password, done)=> {
-//    return done (null, "nothing");
-  mongoose.connect(config.DATA_URL, ()=> {
-    console.log('connected to mongodb');
-  });
   User.findOne({'local.username': username}, (err, user)=> {
     if (err) return done(err);
     

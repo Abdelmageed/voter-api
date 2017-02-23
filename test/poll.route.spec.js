@@ -17,8 +17,7 @@ afterEach(() => {
 })
 
 after(()=> {
-    server.close();
-
+  server.close();
 })
 
 describe('Poll Router', () => {

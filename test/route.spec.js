@@ -1,17 +1,27 @@
 import request from 'supertest';
+import server from '../index';
 import app from '../server';
 import {expect} from 'chai';
 import config from '../config';
-import mongoose from 'mongoose';
+import sinon from 'sinon';
+import Poll from '../models/Poll';
 import User from '../models/User';
+import mongoose from 'mongoose';
 
 describe('Routes', () => {
-  let agent = request.agent(app.listen());
+  let sandbox;
+  let agent = request.agent(server);
+  
+  beforeEach(()=> {
+    sandbox = sinon.sandbox.create();
+  })
+  
+  afterEach(()=> {
+    sandbox.restore();
+  })
+  
   before((done) => {
     let user;
-    mongoose.connect(config.DATA_URL, (err) => {
-      if (err) throw err;
-      console.log('mongoose connected to test db');
       user = new User({
         local: {
           username: "Abdelmageed",
@@ -22,7 +32,6 @@ describe('Routes', () => {
       user.save();
       console.log('user Abdelmageed created');
       done();
-    });
 
   });
 
@@ -34,15 +43,12 @@ describe('Routes', () => {
       {'local.username': 'NewUser'}])
       .exec ((err) => {
       if (err) throw err;
+      console.log('test users removed');
       delete mongoose.models.User;
       delete mongoose.modelSchemas.User;
-      console.log('test users removed');
-      mongoose.disconnect(() => {
-        console.log('mongoose disconnected from test db');
-        done();
-      });
-    });
-
+      server.close();
+      done();
+    });//more change
   });
   
   describe('POST /login', () => {
@@ -86,7 +92,7 @@ describe('Routes', () => {
         .send('username=NewUser&password=NewPassword123')
         .expect(401, done);
     });
-  })
+  });
   
   describe('GET /logout', ()=> {
     it('should log out and remove req.user', (done)=> {
@@ -98,5 +104,7 @@ describe('Routes', () => {
         done();
       })
     })
-  })
+  });
+  
+  
 })

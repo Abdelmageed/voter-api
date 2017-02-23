@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
 import {expect} from 'chai';
 import sinon from 'sinon';
 import config from '../config';
 import Poll from '../models/Poll';
 import User from '../models/User';
+import mongoose from 'mongoose';
 
 const addUser = ()=> {
   const user = new User({
@@ -24,27 +24,20 @@ const removeUser = ()=> {
 describe('Poll', ()=> {
   
   before((done)=> {
-    mongoose.connect(config.DATA_URL, (err)=> {
-      if (err) throw err;
-      console.log('connected to mongodb');
       addUser();
       
       done();
-    })
   });
   
   after((done)=> {
-    mongoose.disconnect(()=> {
-      console.log('disconnected from mongodb');
-      delete mongoose.models.Poll;
-      delete mongoose.modelSchemas.Poll;
-      delete mongoose.models.User;
-      delete mongoose.modelSchemas.User;
-      Poll.remove();
-      removeUser();
-      done();
-    })
-  });
+    Poll.remove();
+    removeUser();
+    delete mongoose.models.User;
+    delete mongoose.modelSchemas.User;
+    delete mongoose.models.Poll;
+    delete mongoose.modelSchemas.Poll;
+    done();
+    });
   
   it('.create(newPoll) should add a new poll', (done) => {
   let newPoll,
@@ -94,4 +87,7 @@ describe('Poll', ()=> {
     expect(spy.args[0][1]).to.be.equal(newPoll);
     done();
   });
-})
+  
+  });
+  
+  

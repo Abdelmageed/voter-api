@@ -14,20 +14,14 @@ const PollSchema = new Schema({
 });
 
 PollSchema.methods.create = (newPoll, cb)=> {
-  mongoose.connect(config.DATA_URL, (err)=> {
-    if(err) throw err;
     const model = new Poll(newPoll);
     model.save((err, poll)=> {
       return cb(err, poll);
     });
-  });
 }
 
 PollSchema.methods.update = (id, newPoll, cb)=> {
-  mongoose.connect(config.DATA_URL, (err)=> {
-    if (err) throw err;
     Poll.findByIdAndUpdate(id, newPoll, cb);
-  });
 }
 
 export default mongoose.model('Poll', PollSchema);

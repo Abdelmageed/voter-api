@@ -3,6 +3,7 @@
 import mongoose from 'mongoose';
 import config from '../config';
 
-mongoose.connect(config.DATA_URL);
+if(!mongoose.connection.db)
+  mongoose.connect(config.DATA_URL);
 
 //let agent = request.agent(app.listen());

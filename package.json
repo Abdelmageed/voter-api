@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "start mongod --dbpath=\"data\" && babel-node index.js",
-    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test": "mocha --compilers js:babel-core/register --recursive --require \"test/testHelper.js\"",
     "test:watch": "npm test -- \"--watch\""
   },
   "repository": {
