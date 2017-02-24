@@ -13,15 +13,4 @@ const PollSchema = new Schema({
   _author: { type: Schema.Types.ObjectId, ref: 'User' } 
 });
 
-PollSchema.methods.create = (newPoll, cb)=> {
-    const model = new Poll(newPoll);
-    model.save((err, poll)=> {
-      return cb(err, poll);
-    });
-}
-
-PollSchema.methods.update = (id, newPoll, cb)=> {
-    Poll.findByIdAndUpdate(id, newPoll, cb);
-}
-
 export default mongoose.model('Poll', PollSchema);
