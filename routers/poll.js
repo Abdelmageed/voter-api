@@ -1,6 +1,5 @@
 import express from 'express';
 import Poll from '../models/Poll';
-import config from '../config';
 const router = express.Router();
 
 router.get('/', (req, res)=> {
