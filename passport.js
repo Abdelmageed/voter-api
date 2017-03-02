@@ -43,14 +43,14 @@ passport.use('local-signup', new LocalStrategy((username, password, done)=> {
     })
   }))
 
-//passport.serializeUser((user, done)=> {
-//  done(null, user.id);
-//});
-//
-//passport.deserializeUser((id, done)=> {
-//  User.findById(id, function(err, user) {
-//    done(err, user);
-//  });
-//});
+passport.serializeUser((user, done)=> {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done)=> {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 export default passport;

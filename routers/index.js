@@ -2,7 +2,7 @@ import passport from 'passport';
 import express from 'express';
 const router = express.Router();
 
-router.post('/login', passport.authenticate('local', {session: false}), (req, res)=> {
+router.post('/login', passport.authenticate('local'), (req, res)=> {
 //  console.log(req.user.local.username);
   if(!req.user) {
     res.status(401);
@@ -16,7 +16,7 @@ router.post('/login', passport.authenticate('local', {session: false}), (req, re
   res.end();
 });
 
-router.post('/signup', passport.authenticate('local-signup', {session: false}), (req,res)=> {
+router.post('/signup', passport.authenticate('local-signup'), (req,res)=> {
   res.end('your account has been created');
 });
 
@@ -25,13 +25,5 @@ router.get('/logout', (req, res)=> {
   res.end();
 });
 
-router.get('/', (req, res)=> {
-  res.send('test');
-  res.end();
-});
-
-router.post('/', (req, res)=> {
-  res.end('test post');
-})
 
 export default router;

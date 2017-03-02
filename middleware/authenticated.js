@@ -3,9 +3,7 @@ const authenticated = (req, res, next)=> {
     return next();
   }
   res.status(401);
-//  consle.log('called status');
   res.end();
-//  console.log('called end');
 
 }
 
