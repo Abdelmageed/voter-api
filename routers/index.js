@@ -1,5 +1,7 @@
 import passport from 'passport';
 import express from 'express';
+import User from '../models/User';
+
 const router = express.Router();
 
 router.post('/login', passport.authenticate('local'), (req, res)=> {
@@ -30,5 +32,16 @@ router.get('/logout', (req, res)=> {
   res.end();
 });
 
+router.get('/check_username', (req, res)=> {
+  User.findOne({'local.username': req.params.username}, (err, doc)=> {
+    console.log(doc);
+    if (doc){
+      res.send({valid: false});
+    } else {
+      res.send({valid: true});
+    }
+    res.end();
+  });
+});
 
 export default router;

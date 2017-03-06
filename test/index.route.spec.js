@@ -99,13 +99,6 @@ describe('Routes', () => {
         .end(done);
     });
     
-//    it('should not sign up a user with a used username', (done)=> {
-//
-//      agent
-//        .post('/signup')
-//        .send('username=NewUser&password=NewPassword123')
-//        .expect(401, done);
-//    });
   });
   
   describe('GET /logout', ()=> {
@@ -120,5 +113,25 @@ describe('Routes', () => {
     })
   });
   
-  
+  describe('GET /check_username', ()=> {
+    
+    it('should respond with {valid:false} if the username is unavailable', (done)=> {
+      const stubUser = sandbox.stub(User, 'findOne');
+      stubUser.yields(null, {user: 'user'});
+      
+      agent
+        .get('/check_username')
+        .expect(200, {valid: false}, done);
+      
+    });
+    
+    it('should respond with {valid:true} if the username is available', (done)=> {
+      const stubUser = sandbox.stub(User, 'findOne');
+      stubUser.yields(null, null);
+      
+      agent
+        .get('/check_username')
+        .expect(200, {valid: true}, done);
+    });
+  });
 })
