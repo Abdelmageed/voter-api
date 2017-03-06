@@ -17,7 +17,12 @@ router.post('/login', passport.authenticate('local'), (req, res)=> {
 });
 
 router.post('/signup', passport.authenticate('local-signup'), (req,res)=> {
-  res.end('your account has been created');
+  let user = {
+    id: req.user._id,
+    username: req.user.local.username
+  };
+  res.json({user});
+  res.end();
 });
 
 router.get('/logout', (req, res)=> {
