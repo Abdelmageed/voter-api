@@ -113,14 +113,15 @@ describe('Routes', () => {
     })
   });
   
-  describe('GET /check_username', ()=> {
+  describe('POST /check_username', ()=> {
     
     it('should respond with {valid:false} if the username is unavailable', (done)=> {
       const stubUser = sandbox.stub(User, 'findOne');
       stubUser.yields(null, {user: 'user'});
       
       agent
-        .get('/check_username')
+        .post('/check_username')
+        .send({username: 'name'})
         .expect(200, {valid: false}, done);
       
     });
@@ -130,7 +131,8 @@ describe('Routes', () => {
       stubUser.yields(null, null);
       
       agent
-        .get('/check_username')
+        .post('/check_username')
+        .send({username: 'name'})
         .expect(200, {valid: true}, done);
     });
   });

@@ -32,12 +32,13 @@ router.get('/logout', (req, res)=> {
   res.end();
 });
 
-router.get('/check_username', (req, res)=> {
-  User.findOne({'local.username': req.params.username}, (err, doc)=> {
-    console.log(doc);
+router.post('/check_username/', (req, res)=> {
+  User.findOne({'local.username': req.body.username}, (err, doc)=> {
     if (doc){
+      console.log('invalid')
       res.send({valid: false});
     } else {
+      console.log('valid');
       res.send({valid: true});
     }
     res.end();
