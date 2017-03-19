@@ -34,7 +34,7 @@ describe('Poll Router', () => {
       pollStub.yields(null, polls);
       agent
         .get('/poll')
-        .expect(200, polls, done);
+        .expect(200, {polls}, done);
     });
     
   });

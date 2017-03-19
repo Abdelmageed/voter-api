@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/', (req, res)=> {
     Poll.find({}, (err, polls)=> {
       if (err) throw err;
-      res.send(polls);
+      res.json({polls});
       
     })
   });
@@ -33,7 +33,8 @@ router.delete('/:id', (req, res)=> {
 });
 
 router.post('/', (req, res)=> {
-  Poll.create(req.body.poll, (err, savedPoll)=> {
+  console.log(req.body);
+  Poll.create(req.body, (err, savedPoll)=> {
     if (err) throw err;
     res.send(savedPoll);
     res.end();
