@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const OptionSchema = new Schema({
   name: String,
-  votes: Number
+  votes: [Schema.Types.ObjectId]
 });
 
 const PollSchema = new Schema({
