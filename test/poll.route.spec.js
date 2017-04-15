@@ -3,6 +3,7 @@ import app from '../server';
 import server from '../index';
 import { expect } from 'chai';
 import sinon from 'sinon';
+import sinonMongoose from 'sinon-mongoose';
 import Poll from '../models/Poll';
 import config from '../config';
 let sandbox;
@@ -30,8 +31,11 @@ describe('Poll Router', () => {
       }, {
         name: 'poll2'
       }];
-      const pollStub = sandbox.stub(Poll, 'find');
-      pollStub.yields(null, polls);
+      const pollStub = sandbox.mock(Poll)
+        .expects('find')
+        .chain('populate')
+        .chain('exec')
+        .yields(null, polls);
       agent
         .get('/poll')
         .expect(200, {polls}, done);
@@ -61,8 +65,11 @@ describe('Poll Router', () => {
       const id = 1,
             poll = {name: 'poll name'};
       
-      const pollStub = sandbox.stub(Poll, 'find');
-      pollStub.yields(null, poll);
+      const pollStub = sandbox.mock(Poll)
+        .expects('findOne')
+        .chain('populate')
+        .chain('exec')
+        .yields(null, poll);
       agent
         .get('/poll/:id')
         .send({id})

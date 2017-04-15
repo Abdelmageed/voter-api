@@ -3,19 +3,22 @@ import Poll from '../models/Poll';
 const router = express.Router();
 
 router.get('/', (req, res)=> {
-    Poll.find({}, (err, polls)=> {
+    Poll.find({})
+        .populate('_author', 'local.username')
+        .exec((err, polls)=> {
       if (err) throw err;
-      res.json({polls});
-      
-    })
+      res.json({polls});      
+    });
   });
 
 router.get('/:id', (req, res)=> {
-  Poll.find({_id: req.params.id}, (err, poll)=> {
+  Poll.findOne({_id: req.params.id})
+    .populate('_author', 'local.username')
+    .exec((err, poll)=> {
     if (err) throw err;
     res.send(poll);
     res.end();
-  })
+  });
 });
 
 router.put('/', (req, res)=> {
