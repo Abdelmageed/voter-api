@@ -22,7 +22,7 @@ router.get('/:id', (req, res)=> {
 });
 
 router.put('/', (req, res)=> {
-    Poll.findByIdAndUpdate(req.params.id, req.params.newPoll, (err, newPoll)=> {
+    Poll.findByIdAndUpdate(req.body.id, req.body.newPoll, {new: true}, (err)=> {
       if (err) throw err;
       res.end();
     })
