@@ -10,11 +10,13 @@ router.post('/login', passport.authenticate('local'), (req, res)=> {
     res.status(401);
     res.end();
   }
+
   let user = {
     id: req.user._id,
     username: req.user.local.username
-  };
-  res.json({user});
+  },
+    sessionId = req.sessionID;
+  res.json({user, sessionId});
   res.end();
 });
 
@@ -22,8 +24,9 @@ router.post('/signup', passport.authenticate('local-signup'), (req,res)=> {
   let user = {
     id: req.user._id,
     username: req.user.local.username
-  };
-  res.json({user});
+  },
+    sessionId = req.sessionID;
+  res.json({user, sessionId});
   res.end();
 });
 
