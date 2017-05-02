@@ -39,8 +39,10 @@ router.post('/', (req, res)=> {
   console.log(req.body);
   Poll.create(req.body, (err, savedPoll)=> {
     if (err) throw err;
-    res.send(savedPoll);
-    res.end();
+    Poll.populate(savedPoll, {path: '_author', select: '_id local.username'}, (err, populatedPoll) => {
+      res.send(populatedPoll);
+      res.end();
+    });
   });
 });
 

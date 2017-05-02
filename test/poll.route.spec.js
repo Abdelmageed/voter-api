@@ -95,7 +95,7 @@ describe('Poll Router', () => {
     
     it('should save the give poll', (done)=> {
       const poll = {name: 'created poll'};
-      const pollStub = sandbox.stub(Poll, 'create');
+      const pollStub = sandbox.stub(Poll, 'populate');
       pollStub.yields(null, poll);
       agent
         .post('/poll')
