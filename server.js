@@ -25,4 +25,10 @@ app.options('*', cors())
 app.use('/', index);
 app.use('/poll', poll);
 
+// serve client side code.
+app.use('/',express.static('client'));
+app.get('*', function(req, res) {
+  res.sendFile(path.resolve(__dirname, 'client/index.html'));
+});
+
 export default app;
