@@ -3,7 +3,7 @@ import app from './server';
 import mongoose from 'mongoose';
 import User from './models/User';
 
-const server = app.listen(config.PORT, 'localhost');
+const server = app.listen(config.PORT);
 
 //, function() {
   console.log(`express server listening on port ${config.PORT}`);
