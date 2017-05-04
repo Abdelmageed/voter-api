@@ -2,6 +2,8 @@ import User from './models/User';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import config from './config';
+import TwitterStrategy from 'passport-twitter';
+
 const localStrategy = LocalStrategy.Strategy;
 
 passport.use(new localStrategy((username, password, done)=> {
@@ -39,9 +41,31 @@ passport.use('local-signup', new LocalStrategy((username, password, done)=> {
       newUser.save((err, newUser)=> {
         if (err) return done(err);
         return done(null, newUser);
-      })
-    })
-  }))
+      });
+    });
+  }));
+
+passport.use(new TwitterStrategy({
+    consumerKey: config.TWITTER_CONSUMER_KEY,
+    consumerSecret: config.TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://www.example.com/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+    const user = {
+      local: {
+        username: profile.displayName
+      },
+      provider: {
+        id: profile.id
+      }
+    };
+
+    User.findOrCreate(user, function(err, user) {
+      if (err) { return done(err); }
+      done(null, user);
+    });
+  }
+));
 
 passport.serializeUser((user, done)=> {
   done(null, user.id);

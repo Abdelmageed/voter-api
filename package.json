@@ -20,7 +20,7 @@
     "url": "https://github.com/Abdelmageed/voter-api/issues"
   },
   "homepage": "https://github.com/Abdelmageed/voter-api#readme",
-  "devDependencies": {   
+  "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "sinon": "^1.17.7",
@@ -41,10 +41,11 @@
     "cors": "^2.8.1",
     "express": "^4.14.1",
     "express-session": "^1.15.1",
-    "morgan": "^1.8.1",
     "mongodb": "^2.2.24",
     "mongoose": "^4.8.3",
+    "morgan": "^1.8.1",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4"
   }
 }

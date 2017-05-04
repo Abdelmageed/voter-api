@@ -7,6 +7,9 @@ const UserSchema = new Schema({
     username: String,
     password: String
   },
+  provider: {
+    id: String
+  },
   polls: [{type: Schema.Types.ObjectId, ref: 'Poll'}]
 });
 

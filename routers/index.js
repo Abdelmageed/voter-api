@@ -48,4 +48,25 @@ router.post('/check_username/', (req, res)=> {
   });
 });
 
+router.get('/auth/twitter', passport.authenticate('twitter'), (req, res) => {
+  //TODO return authenticated user
+  if(!req.user) {
+    res.status(401);
+    res.end();
+  }
+
+  let user = {
+    id: req.user._id,
+    username: req.user.local.username
+  },
+    sessionId = req.sessionID;
+  res.json({user, sessionId});
+  res.end();
+});
+
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+  successRedirect: '/',
+  failureRedirect: '/'
+}));
+
 export default router;
