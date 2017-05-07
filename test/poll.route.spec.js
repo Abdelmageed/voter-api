@@ -73,7 +73,7 @@ describe('Poll Router', () => {
       agent
         .get('/poll/:id')
         .send({id})
-        .expect(200, poll, done);
+        .expect(200, {poll}, done);
     })
   });
   

@@ -16,7 +16,7 @@ router.get('/:id', (req, res)=> {
     .populate('_author', 'local.username')
     .exec((err, poll)=> {
     if (err) throw err;
-    res.send(poll);
+    res.json({poll});
     res.end();
   });
 });
