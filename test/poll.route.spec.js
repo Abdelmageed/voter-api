@@ -1,13 +1,9 @@
-import request from 'supertest';
-import app from '../server';
-import server from '../index';
+import mongoose from 'mongoose';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import sinonMongoose from 'sinon-mongoose';
-import Poll from '../models/Poll';
-import config from '../config';
+const Poll = mongoose.model('Poll');
 let sandbox;
-let agent = request.agent(server);
 
 beforeEach(() => {
   sandbox = sinon.sandbox.create();
@@ -15,10 +11,6 @@ beforeEach(() => {
 
 afterEach(() => {
   sandbox.restore();
-})
-
-after(()=> {
-  server.close();
 })
 
 describe('Poll Router', () => {

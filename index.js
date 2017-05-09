@@ -1,19 +1,44 @@
+import mongoose from 'mongoose';
+
 import config from './config';
 import app from './server';
-import mongoose from 'mongoose';
-import User from './models/User';
 
-const server = app.listen(config.PORT);
+const dev = (process.env.NODE_ENV !== 'production');
+let server;
+var isPortTaken = function(port, fn) {
+  var net = require('net')
+  var tester = net.createServer()
+  .once('error', function (err) {
+    if (err.code != 'EADDRINUSE') return fn(err)
+    fn(null, true)
+  })
+  .once('listening', function() {
+    tester.once('close', function() { fn(null, false) })
+    .close()
+  })
+  .listen(port)
+}
 
-//, function() {
-  console.log(`express server listening on port ${config.PORT}`);
-//}
+const PORT = process.env.PORT || 3000;
+function startServer(err, isPortTaken){
+  if(! (err && isPortTaken)){
+      server = app.listen(PORT, ()=> {
+      console.log(`express server started at localhost:${PORT}`);
+    });
+  }
+}
 
-const user = new User({local: {username: 'Abdelmageed', password: 'password123'}});
-user.save((err, newUser)=> {
-  console.log('user saved');
-});
+
+if(dev) {
+  isPortTaken(PORT, startServer);
+} else {
+  server = app.listen(PORT, ()=> {
+      console.log(`express server started at localhost:${PORT}`);
+  });
+}
+
 if(!mongoose.connection.db)
   mongoose.connect(config.DATA_URL);
+console.log(`connected to db at ${config.DATA_URL}`);
 
 export default server;

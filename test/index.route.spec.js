@@ -1,16 +1,11 @@
-import request from 'supertest';
-import server from '../index';
-import app from '../server';
 import {expect} from 'chai';
-import config from '../config';
 import sinon from 'sinon';
-import Poll from '../models/Poll';
-import User from '../models/User';
 import mongoose from 'mongoose';
+const User = mongoose.model('User');
+import {seed, reset} from './seedData';
 
 describe('Routes', () => {
   let sandbox;
-  let agent = request.agent(server);
   
   beforeEach(()=> {
     sandbox = sinon.sandbox.create();
@@ -20,35 +15,12 @@ describe('Routes', () => {
     sandbox.restore();
   })
   
-  before((done) => {
-    let user;
-      user = new User({
-        local: {
-          username: "Abdelmageed",
-          password: "password123"
-        }
-      });
-
-      user.save();
-      console.log('user Abdelmageed created');
-      done();
-
+ before((done) => {
+    seed(done);
   });
 
   after((done) => {
-    User.remove({
-    })
-      .or([
-      {'local.username': 'Abdelmageed'},
-      {'local.username': 'NewUser'}])
-      .exec ((err) => {
-      if (err) throw err;
-      console.log('test users removed');
-      delete mongoose.models.User;
-      delete mongoose.modelSchemas.User;
-      server.close();
-      done();
-    });//more change
+    reset(done);
   });
   
   describe('POST /login', () => {
@@ -58,15 +30,14 @@ describe('Routes', () => {
         _id: 1,
         username: 'name'
       };
-//      const stubUser = sandbox.stub(User, 'findOne');
-//      stubUser.yields(null, user);
+
       const successMessage = "logged in successfuly";
       agent
         .post('/login')
         .send('username=Abdelmageed&password=password123')
         .expect(200)
         .expect((res)=> {
-//          console.log(res.body);  
+
           expect(res.body.user.username).to.equal('Abdelmageed');
       })
         .end(done);

@@ -1,50 +1,21 @@
-import request from 'supertest';
-import { app } from '../server';
 import mongoose from 'mongoose';
-import config from '../config';
-import db from '../index';
 import sinon from 'sinon';
 import 'sinon-mongoose';
-import {
-  expect
-}
-from 'chai';
-import User from '../models/User';
+import {expect}from 'chai';
+const User = mongoose.model('User');
 import bcrypt from 'bcrypt-nodejs';
-
+import {seed, reset} from './seedData';
 
 describe('User', () => {
 
   before((done) => {
-    let user;
-      user = new User({
-        local: {
-          username: "Abdelmageed",
-          password: "password123"
-        }
-      });
-
-      user.save((err)=> {
-        if (err) throw err;
-        console.log('user Abdelmageed created');
-        done();
-      });
-
+    seed(done);
   });
 
   after((done) => {
-    User.remove({
-      "local.username": "Abdelmageed"
-    }, (err) => {
-      if (err) throw err;
-      console.log('user Abdelmageed removed');
-      delete mongoose.models.User;
-      delete mongoose.modelSchemas.User;
-      done();
-    });
-
+    reset(done);
   });
-
+  
   it('should hash the password', function (done) {
     const password = "password123";
 
