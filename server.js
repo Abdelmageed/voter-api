@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import poll from './routers/poll';
 import index from './routers/index';
+import path from 'path';
 
 const app = express();
 
